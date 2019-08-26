@@ -11,14 +11,16 @@ import pickle
 import pystan
 import os
 
+abs_path = os.path.dirname(os.path.abspath(__file__))
+
 
 # =============================================================================
 # Model functions
 # =============================================================================
 def compile_stan_model(force=False):
     """Autocompile Stan model."""
-    source_path = 'model.stan'
-    target_path = 'model.bin'
+    source_path = os.path.join(abs_path, 'model.stan')
+    target_path = os.path.join(abs_path, 'model.bin')
 
     if os.path.exists(target_path):
         # Test whether the model has changed and only compile if it did
@@ -44,7 +46,7 @@ def compile_stan_model(force=False):
 def load_model():
     """Load the model to memory."""
     compile_stan_model()
-    with open("model.bin", 'rb') as f:
+    with open(os.path.join(abs_path, "model.bin"), 'rb') as f:
         return pickle.load(f)
 
 
