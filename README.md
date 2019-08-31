@@ -44,7 +44,7 @@ For those unfamiliar with Stan, we have written [a short tutorial](python_exampl
 If you use this code, please consider citing:
 
 "*Reconstruction of plant–pollinator networks from observational data*"<br/>
-[J.-G. Young](http://jgyoung.ca), [F. S. Valdovinos](https://github.com/lordgrilo) and [M.E.J. Newman](http://www-personal.umich.edu/~mejn/)<br/>
+[J.-G. Young](http://jgyoung.ca), [F. S. Valdovinos](https://www.fsvaldovinos.com) and [M.E.J. Newman](http://www-personal.umich.edu/~mejn/)<br/>
 2019 <br/>
 
 ## Author information
