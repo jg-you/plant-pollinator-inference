@@ -18,9 +18,9 @@ To install pystan, simply run:
 
 ## Quickstart
 
-[Our model](model.stan) takes an observation matrix as input (matrix of non-negative integers), and outputs parameters samples as well as edge probabilities conditioned on these parameters.
+[Our model](model.stan) takes a plant-pollinator observation matrix as input (matrix of non-negative integers with the number of observed interactions for each pair of plants and pollinators), and outputs a tensor `Q` where `Q[k,i,j]`, is the probability that the pair (i,j) is connected in sample `k` of the posterior distribution. A connection probability for pair (i,j) can be obtained by averaging over all samples.
 
-Hence, for those familiar with `pystan`, running the model is as simple as
+For those familiar with `pystan`, running the model is as simple as
 
 ```python
 import pystan
