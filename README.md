@@ -18,24 +18,25 @@ To install pystan, simply run:
 
 ## Quickstart
 
-[Our model](model.stan) takes a plant-pollinator observation matrix as input (matrix of non-negative integers with the number of observed interactions for each pair of plants and pollinators), and outputs a tensor `Q` where `Q[k,i,j]`, is the probability that the pair (i,j) is connected in sample `k` of the posterior distribution. A connection probability for pair (i,j) can be obtained by averaging over all samples.
+[Our model](model.stan) takes a matrix of observations `M` as input (matrix of non-negative integers, whose entries are number of observed interactions for each pair of plants and pollinators), and outputs a tensor `Q` where `Q[k,i,j]`, is the probability that the pair (i,j) is connected in sample `k` of the posterior distribution. A connection probability for pair (i,j) can be obtained by averaging over all samples. The program also generates samples for non-network quantities such as connectance, species abundances and the strength of the pollination preference.
 
-For those familiar with `pystan`, running the model is as simple as
+For those familiar with `pystan`, running the model is as simple as:
 
 ```python
 import pystan
 import numpy as np
 # Compile the model
 model = pystan.StanModel(`model.stan`, model_name="plant_pol")
-# Sample
+# Load data matrix
 M = np.loadtxt('example_matrix.txt')
+# Generate samples
 samples = model.sampling(data={'M': M, 'n_p': M.shape[0], 'n_a': M.shape[1]})
 # Calculate estimates
-print("Average posterior connectance:", np.mean(samples['rho'], axis=0))
+print("Connection probability for all pairs:", np.mean(samples['Q'], axis=0)
+print("Average posterior connectance:", np.mean(samples['rho'], axis=0)))
 ```
 
-
-where `n_p` and `n_a` are the dimension of the observation matrix `M`.
+In this snippet,  `n_p` and `n_a` are the dimension of the observation matrix `M`.
 
 For those unfamiliar with Stan, we have written [a short tutorial](python_example.ipynb), as well as two python modules that abstract away most of the complexity associated with manipulating samples.
 
