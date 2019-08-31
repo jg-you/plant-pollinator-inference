@@ -1,4 +1,4 @@
-# plant-pol-inference
+# plant-pollinator-inference 
 
 Code for "Reconstruction of plant--pollinator networks from observational data", implemented in [Stan](http://mc-stan.org), with an emphasis on the `pystan` interface.
 
