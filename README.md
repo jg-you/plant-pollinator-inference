@@ -1,6 +1,6 @@
 # plant-pollinator-inference 
 
-Code for "Reconstruction of plant--pollinator networks from observational data", implemented in [Stan](http://mc-stan.org), with an emphasis on the `pystan` interface.
+Code for "[Reconstruction of plant--pollinator networks from observational data](https://www.biorxiv.org/content/10.1101/754077v1)", implemented in [Stan](http://mc-stan.org), with an emphasis on the `pystan` interface.
 
 
 Pull requests with code for other Stan interfaces are more than welcomed!
@@ -50,4 +50,4 @@ bioRxiv:754077 (2019) <br/>
 
 ## Author information
 
-Code by [Jean-Gabriel Young](www.jgyoung.ca). Get in touch with questions at <jgyou@umich.edu>.
+Code by [Jean-Gabriel Young](www.jgyoung.ca). Don't hesitate to get in touch at <jgyou@umich.edu>, or via the [issues](https://github.com/jg-you/plant-pollinator-inference/issues)!
