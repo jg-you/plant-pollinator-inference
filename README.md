@@ -5,6 +5,8 @@ Code for "[Reconstruction of plant--pollinator networks from observational data]
 
 Pull requests with code for other Stan interfaces are more than welcomed!
 
+![](repoimg.png)
+
 
 ## Dependencies
 
