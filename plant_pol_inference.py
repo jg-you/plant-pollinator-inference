@@ -95,7 +95,7 @@ def load_samples(fpath='samples.bin'):
 def test_samples(samples, tol=0.1, num_chains=4):
     """Verify that no chain has a markedly lower average log-probability."""
     n = len(samples['lp__']) // num_chains  # number of samples per chain
-    log_probs = [samples['lp__'][i:(i + 1) * n] for i in range(num_chains)]
+    log_probs = [samples['lp__'][i * n:(i + 1) * n] for i in range(num_chains)]
     log_probs_means = np.array([np.mean(lp) for lp in log_probs])
     return np.alltrue(log_probs_means - (1 - tol) * max(log_probs_means) > 0)
 
