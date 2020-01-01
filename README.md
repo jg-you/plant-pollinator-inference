@@ -1,9 +1,11 @@
-# plant-pol-inference
+# plant-pollinator-inference 
 
-Code for "Reconstruction of plant--pollinator networks from observational data", implemented in [Stan](http://mc-stan.org), with an emphasis on the `pystan` interface.
+Code for "[Reconstruction of plant--pollinator networks from observational data](https://www.biorxiv.org/content/10.1101/754077v1)", implemented in [Stan](http://mc-stan.org), with an emphasis on the `pystan` interface.
 
 
 Pull requests with code for other Stan interfaces are more than welcomed!
+
+![](repoimg.png)
 
 
 ## Dependencies
@@ -18,24 +20,25 @@ To install pystan, simply run:
 
 ## Quickstart
 
-[Our model](model.stan) takes an observation matrix as input (matrix of non-negative integers), and outputs parameters samples as well as edge probabilities conditioned on these parameters.
+[Our model](model.stan) takes a matrix of observations `M` as input (matrix of non-negative integers, whose entries are number of observed interactions for each pair of plants and pollinators), and outputs a tensor `Q` where `Q[k,i,j]`, is the probability that the pair (i,j) is connected in sample `k` of the posterior distribution. A connection probability for pair (i,j) can be obtained by averaging over all samples. The program also generates samples for non-network quantities such as connectance, species abundances and the strength of the pollination preference.
 
-Hence, for those familiar with `pystan`, running the model is as simple as
+For those familiar with `pystan`, running the model is as simple as:
 
 ```python
 import pystan
 import numpy as np
 # Compile the model
 model = pystan.StanModel(`model.stan`, model_name="plant_pol")
-# Sample
+# Load data matrix
 M = np.loadtxt('example_matrix.txt')
+# Generate samples
 samples = model.sampling(data={'M': M, 'n_p': M.shape[0], 'n_a': M.shape[1]})
 # Calculate estimates
-print("Average posterior connectance:", np.mean(samples['rho'], axis=0))
+print("Connection probability for all pairs:", np.mean(samples['Q'], axis=0)
+print("Average posterior connectance:", np.mean(samples['rho'], axis=0)))
 ```
 
-
-where `n_p` and `n_a` are the dimension of the observation matrix `M`.
+In this snippet,  `n_p` and `n_a` are the dimension of the observation matrix `M`.
 
 For those unfamiliar with Stan, we have written [a short tutorial](python_example.ipynb), as well as two python modules that abstract away most of the complexity associated with manipulating samples.
 
@@ -43,10 +46,10 @@ For those unfamiliar with Stan, we have written [a short tutorial](python_exampl
 
 If you use this code, please consider citing:
 
-"*Reconstruction of plant–pollinator networks from observational data*"<br/>
-[J.-G. Young](http://jgyoung.ca), [F. S. Valdovinos](https://github.com/lordgrilo) and [M.E.J. Newman](http://www-personal.umich.edu/~mejn/)<br/>
-2019 <br/>
+"[*Reconstruction of plant–pollinator networks from observational data*](https://www.biorxiv.org/content/10.1101/754077v1)"<br/>
+[J.-G. Young](http://jgyoung.ca), [F. S. Valdovinos](https://www.fsvaldovinos.com) and [M.E.J. Newman](http://www-personal.umich.edu/~mejn/)<br/>
+bioRxiv:754077 (2019) <br/>
 
 ## Author information
 
-Code by [Jean-Gabriel Young](www.jgyoung.ca). Get in touch with questions at <jgyou@umich.edu>.
+Code by [Jean-Gabriel Young](https://www.jgyoung.ca). Don't hesitate to get in touch at <jgyou@umich.edu>, or via the [issues](https://github.com/jg-you/plant-pollinator-inference/issues)!
