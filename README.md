@@ -52,4 +52,4 @@ bioRxiv:754077 (2019) <br/>
 
 ## Author information
 
-Code by [Jean-Gabriel Young](https://www.jgyoung.ca). Don't hesitate to get in touch at <jgyou@umich.edu>, or via the [issues](https://github.com/jg-you/plant-pollinator-inference/issues)!
+Code by [Jean-Gabriel Young](https://www.jgyoung.ca). Don't hesitate to get in touch at <jean.gabriel.young@gmail.com>, or via the [issues](https://github.com/jg-you/plant-pollinator-inference/issues)!
