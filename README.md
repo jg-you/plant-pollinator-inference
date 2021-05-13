@@ -39,7 +39,7 @@ print("Average posterior connectance:", np.mean(samples['rho'], axis=0)))
 ```
 
 In this snippet,  `n_p` and `n_a` are the dimension of the observation matrix `M`.
-The observation matrix is thus a `n_p * n_a` numpy array of integers.
+The observation matrix `M` is thus a `n_p * n_a` numpy array of integers.
 
 For those unfamiliar with Stan, we have written [a short tutorial](python_example.ipynb), as well as two python modules that abstract away most of the complexity associated with manipulating samples.
 
