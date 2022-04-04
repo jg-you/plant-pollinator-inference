@@ -4,6 +4,12 @@
 # In[ ]:
 
 
+#!/usr/bin/env python
+# coding: utf-8
+
+# In[ ]:
+
+
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
@@ -35,7 +41,7 @@ def compile_stan_model(M, force=False):
             current_model = pickle.load(f)
         with open(source_path, 'r') as f:
             file_content = "".join([line for line in f])
-        if file_content != current_model.model_code or force:
+        if file_content != current_model.program_code or force:
             print(target_path, "[Compiling]", ["", "[Forced]"][force])
             
             # Prepare the data dictionary
@@ -69,7 +75,7 @@ def compile_stan_model(M, force=False):
                 model_code = f.read()
                 
         # Build the posterior model
-        model = stan.build(model_code, data = data, random_seed = 1)
+        model = stan.build(model_code, data = data)
         with open(target_path, 'wb') as f:
             pickle.dump(model, f)
 
@@ -86,9 +92,12 @@ def load_model(M):
 def generate_sample(model, num_chains=4, warmup=5000, num_samples=500):
     """Run sampling for data matrix M."""    
     
-    fit = model.sample(num_chains = 4, num_samples = warmup + num_samples)
+    samples = model.sample(num_chains = num_chains, 
+                           num_samples = num_samples, 
+                           num_warmup = warmup,
+                           max_depth = 15)
 
-    return fit
+    return samples
 
 
 def save_samples(samples, fpath='samples.bin'):
@@ -117,9 +126,12 @@ def load_samples(fpath='samples.bin'):
 
 def test_samples(samples, tol=0.1, num_chains=4):
     """Verify that no chain has a markedly lower average log-probability."""
-    n = len(samples['lp__']) // num_chains  # number of samples per chain
-    log_probs = [samples['lp__'][i * n:(i + 1) * n] for i in range(num_chains)]
+
+    log_probs = samples['lp__'][0]
+    n = len(log_probs) // num_chains  # number of samples per chain
+    log_probs = [log_probs[list(range(i, n - (num_chains - i), num_chains))] for i in range(num_chains)]
     log_probs_means = np.array([np.mean(lp) for lp in log_probs])
+    print(log_probs_means)
     return np.alltrue(log_probs_means - (1 - tol) * max(log_probs_means) > 0)
 
 
@@ -128,11 +140,11 @@ def test_samples(samples, tol=0.1, num_chains=4):
 # =============================================================================
 def get_posterior_predictive_matrix(samples):
     """Calculate the posterior predictive matrix."""
-    Q = samples['Q']
-    C = samples['C']
-    r = samples['r']
-    ones = np.ones((len(samples['lp__']), Q.shape[1], Q.shape[2]))
-    sigma_tau = np.einsum('ki,kj->kij', samples['sigma'], samples['tau'])
+    Q = samples['Q'][0]
+    C = samples['C'][0]
+    r = samples['r'][0]
+    ones = np.ones((len(samples['lp__'][0]), Q.shape[1], Q.shape[2]))
+    sigma_tau = np.einsum('ki,kj->kij', samples['sigma'][0], samples['tau'][0])
     accu = (1 - Q) * np.einsum('kij,k->kij', ones, C) * sigma_tau
     accu += Q * np.einsum('kij,k->kij', ones, C * (1 + r)) * sigma_tau
     return np.mean(accu, axis=0)
@@ -140,7 +152,7 @@ def get_posterior_predictive_matrix(samples):
 
 def estimate_network(samples):
     """Return the matrix of edge probabilities P(B_ij=1)."""
-    return np.mean(samples['Q'], axis=0)
+    return np.mean(samples['Q'][0], axis=0)
 
 
 def get_network_property_distribution(samples, property, num_net=10):
@@ -156,10 +168,11 @@ def get_network_property_distribution(samples, property, num_net=10):
     num_net: int
         Number of networks to generate for each parameter samples.
     """
-    values = np.zeros(len(samples['lp__']) * num_net)
-    for i, Q in enumerate(samples['Q']):
+    values = np.zeros(len(samples['lp__'][0]) * num_net)
+    for i, Q in enumerate(samples['Q'][0]):
         for j in range(num_net):
             B = np.random.binomial(n=1, p=Q)
             values[i * num_net + j] = property(B)
     return values
+
 
