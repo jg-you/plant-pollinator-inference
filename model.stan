@@ -25,6 +25,9 @@ parameters {
   real<lower=0, upper=1> rho;
 }
 model {
+  // prior
+  r ~ exponential(0.01);
+
   // Global sums and parameters
   target += M_tot * log(C) - C;
   // Weighted marginals of the data matrix 
