@@ -39,7 +39,7 @@ model {
     for (j in 1:n_a) {
       real nu_ij_0 = log(1 - rho);
       real nu_ij_1 = log(rho) + M[i,j] * log(1 + r) - C * r * sigma[i] * tau[j];
-      if (nu_ij_0 not None) and (nu_ij_0 > nu_ij_1)
+      if (nu_ij_0 && nu_ij_0 > nu_ij_1)
         target += nu_ij_0 + log1p_exp(nu_ij_1 - nu_ij_0);
       else
         target += nu_ij_1 + log1p_exp(nu_ij_0 - nu_ij_1);
