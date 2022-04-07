@@ -2,12 +2,12 @@ data {
   // Dimensions of the data matrix, and matrix itself.
   int<lower=1> n_p;
   int<lower=1> n_a;
-  array[n_p, n_a] int<lower=0> M;
+  int<lower=0> M[n_p, n_a];
 }
 transformed data {
   // Pre-compute the marginals of M to save computation in the model loop.
-  array[n_p] int M_rows = rep_array(0, n_p);
-  array[n_a] int M_cols = rep_array(0, n_a);
+  int M_rows[n_p] = rep_array(0, n_p);
+  int M_cols[n_a] = rep_array(0, n_a);
   int M_tot = 0;
   for (i in 1:n_p) {
     for (j in 1:n_a) {
@@ -51,7 +51,7 @@ model {
 } 
 generated quantities {
   // Posterior edge probability matrix
-  array[n_p, n_a] real<lower=0> Q;
+  real<lower=0> Q[n_p, n_a];
   for (i in 1:n_p) {
     for (j in 1:n_a) {
       real nu_ij_0 = log(1 - rho);
