@@ -1,6 +1,6 @@
 # plant-pollinator-inference 
 
-Code for "[Reconstruction of plant--pollinator networks from observational data](https://www.biorxiv.org/content/10.1101/754077v1)", implemented in [Stan](http://mc-stan.org), with an emphasis on the `pystan` interface.
+Code for "[Reconstruction of plant--pollinator networks from observational data](https://doi.org/10.1038/s41467-021-24149-x)", implemented in [Stan](http://mc-stan.org), with an emphasis on the `pystan` interface.
 
 
 Pull requests with code for other Stan interfaces are more than welcomed!
@@ -12,6 +12,7 @@ Pull requests with code for other Stan interfaces are more than welcomed!
 
 The only necessary dependency is `stan`. 
 Our model will of course work with any [stan interface](https://mc-stan.org/users/interfaces/index.html), but we provide a number of utilities geared toward its use with [`pystan`](https://pypi.org/project/pystan/), the main python interface.
+We provide support for pystan2 and pystan3, which differ significantly.
 
 To install pystan, simply run:
 
@@ -47,10 +48,10 @@ For those unfamiliar with Stan, we have written [a short tutorial](python_exampl
 
 If you use this code, please consider citing:
 
-"[*Reconstruction of plant–pollinator networks from observational data*](https://www.biorxiv.org/content/10.1101/754077v1)"<br/>
+"[*Reconstruction of plant–pollinator networks from observational data*](https://doi.org/10.1038/s41467-021-24149-x)"<br/>
 [J.-G. Young](http://jgyoung.ca), [F. S. Valdovinos](https://www.fsvaldovinos.com) and [M.E.J. Newman](http://www-personal.umich.edu/~mejn/)<br/>
-bioRxiv:754077 (2019) <br/>
+Nature Communications **12**, 3911 (2021) <br/>
 
 ## Author information
 
-Code by [Jean-Gabriel Young](https://www.jgyoung.ca). Don't hesitate to get in touch at <jean.gabriel.young@gmail.com>, or via the [issues](https://github.com/jg-you/plant-pollinator-inference/issues)!
+Code by [Jean-Gabriel Young](https://www.jgyoung.ca) with pystan3 adaptation by S. Dritz <sjdritz@ucdavis.edu>. Don't hesitate to get in touch at <jean.gabriel.young@gmail.com> for more information, or via the [issues](https://github.com/jg-you/plant-pollinator-inference/issues)!
