@@ -35,9 +35,9 @@ abs_path = os.path.dirname(os.path.abspath(__file__))
 # =============================================================================
 # Model functions
 # =============================================================================
-def compile_stan_model(M, force=False, random_seed = None):
+def compile_stan_model(M, random_seed = None):
     """Autocompile Stan model."""
-    source_path = os.path.join(abs_path, 'model.stan')
+    source_path = os.path.join(abs_path, 'model_pystan3.stan')
 
     print("[Compiling]")
            
@@ -62,12 +62,12 @@ def compile_stan_model(M, force=False, random_seed = None):
 # =============================================================================
 # Sampling functions
 # =============================================================================
-def generate_sample(model, num_chains=4, warmup=5000, num_samples=500):
+def generate_sample(model, num_chains=4, num_warmup=5000, num_samples=500):
     """Run sampling for data matrix M."""    
     
     samples = model.sample(num_chains = num_chains, 
                            num_samples = num_samples, 
-                           num_warmup = warmup,
+                           num_warmup = num_warmup,
                            max_depth = 15)
 
     return samples
@@ -104,7 +104,10 @@ def test_samples(samples, tol=0.1, num_chains=4):
     n = len(log_probs) // num_chains  # number of samples per chain
     log_probs = [log_probs[list(range(i, n - (num_chains - i), num_chains))] for i in range(num_chains)]
     log_probs_means = np.array([np.mean(lp) for lp in log_probs])
+    
+    print("[Average Log-Probability Per Chain]")
     print(log_probs_means)
+    
     return np.alltrue(log_probs_means - (1 - tol) * max(log_probs_means) > 0)
 
 
