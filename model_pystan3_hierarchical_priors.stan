@@ -20,28 +20,38 @@ transformed data {
 parameters {
   real<lower=0> C;
   real<lower=0> r;
-  simplex[n_p] sigma;
-  simplex[n_a] tau;
+  real<lower=0> mu_alpha_plants;
+  real<lower=0> mu_alpha_pols;
+  real<lower=0> sigma_alpha_plants;
+  real<lower=0> sigma_alpha_pols;
+  vector<lower=0>[n_p] alpha_plants;
+  vector<lower=0>[n_a] alpha_pols;
+  simplex[n_p] plant_abundances;
+  simplex[n_a] pol_abundances;
   real<lower=0, upper=1> rho;
 }
 model {
   // Prior
   r ~ exponential(0.01);
+  alpha_plants ~ lognormal(mu_alpha_plants, sigma_alpha_plants);
+  alpha_pols ~ lognormal(mu_alpha_pols, sigma_alpha_pols);
+  plant_abundances ~ dirichlet(alpha_plants);
+  pol_abundances ~ dirichlet(alpha_pols);
 
   // Global sums and parameters
   target += M_tot * log(C) - C;
   // Weighted marginals of the data matrix 
   for (i in 1:n_p) {
-    target += M_rows[i] * log(sigma[i]);
+    target += M_rows[i] * log(plant_abundances[i]);
   }
   for (j in 1:n_a) {
-    target += M_cols[j] * log(tau[j]);
+    target += M_cols[j] * log(pol_abundances[j]);
   }
   // Pairwise loop
   for (i in 1:n_p) {
     for (j in 1:n_a) {
       real nu_ij_0 = log(1 - rho);
-      real nu_ij_1 = log(rho) + M[i,j] * log(1 + r) - C * r * sigma[i] * tau[j];
+      real nu_ij_1 = log(rho) + M[i,j] * log(1 + r) - C * r * plant_abundances[i] * pol_abundances[j];
       if (nu_ij_0 > nu_ij_1)
         target += nu_ij_0 + log1p_exp(nu_ij_1 - nu_ij_0);
       else
@@ -55,7 +65,7 @@ generated quantities {
   for (i in 1:n_p) {
     for (j in 1:n_a) {
       real nu_ij_0 = log(1 - rho);
-      real nu_ij_1 = log(rho) + M[i,j] * log(1 + r) - C * r * sigma[i] * tau[j];
+      real nu_ij_1 = log(rho) + M[i,j] * log(1 + r) - C * r * plant_abundances[i] * pol_abundances[j];
       if (nu_ij_1 > 0) 
         Q[i, j] = 1 / (1+ exp(nu_ij_0 - nu_ij_1));
       else
